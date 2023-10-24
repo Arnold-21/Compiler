@@ -5,6 +5,7 @@ class SymbolTable{
         HashTable hash;
 
     public:
+        // The char and string constants, and identifiers are handled separatly for possible easier use later on 
         std::pair<int,int> addIdentifier(std::string name);
         std::pair<int,int> addConstant(std::string value);
         std::pair<int,int> addStringConstant(std::string value);
