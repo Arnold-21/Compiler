@@ -1,0 +1,14 @@
+For the following inputs, the symbol table values are at the following positions:
+Inputs:
+    Identifier ("var");
+    Bool_Constant ("true");
+    Int_Constant ("15");
+    Char_Constant ("15");
+    String_Constant ("15");
+
+Outputs:
+    6 0: var
+    8 0: true
+    2 0: 15
+    3 0: 15
+    3 1: 15
