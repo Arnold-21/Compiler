@@ -1,3 +1,5 @@
+https://github.com/Arnold-21/Compiler
+
 The scanner uses the data structures written in the previous lab, namely the symboltable and the underlying hashtable
 Besides that, it uses a vector to store to tokens gotten from scanning:
     - The first element is the type of the token (identifire, separator, etc...)
