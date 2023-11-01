@@ -1,0 +1,12 @@
+int a = 1, b = 2, c = 3;
+int min = a;
+
+if (min > a)
+{
+    min = a;
+}
+if (min > b)
+{
+    min = b;
+}
+print(min);
