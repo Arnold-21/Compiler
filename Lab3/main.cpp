@@ -50,7 +50,21 @@ int main(int argc, char *argv[]){
             scanner.scan();
         } catch (std::string message){
             out << message << std::endl;
+
+            //Getting the tables from the scanner
+            SymbolTable st = scanner.getST();
+            std::vector<std::pair<tokenType, std::pair<int,int>>> pif = scanner.getPif();
+            std::vector<std::string> tokenVector = scanner.getTokens();
+
+            //Print out the pif
+            printPIF(pif, tokenVector, st, outPIF);
+            outPIF.close();
+
+            //Print out the st
+            st.printSymbolTable(outST);
+            outST.close();
             out.close();
+            
             return 0;
         }
         out << "Lexically correct!" << std::endl;
