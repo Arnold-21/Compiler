@@ -1,0 +1,59 @@
+----------------------------------------------------------------
+p1: compute the minimum of three numbers
+
+int a = 1, b = 2, c = 3;
+int min = a;
+
+if (min > a)
+{
+    min = a;
+}
+if (min > b)
+{
+    min = b;
+}
+print(min);
+
+----------------------------------------------------------------
+p2: verify if a number is prime
+
+int x = 12;
+int i = 2;
+bool prime = true;
+while (i*i <= x && prime)
+{
+    if (x % i == 0)
+    {
+        prime = false;
+    }
+    i = i + 1;
+}
+print(prime);
+
+----------------------------------------------------------------
+p3: compute the sum of n numbers
+
+int n = 5;
+int sum = 0;
+int i = 0;
+int var;
+while (i < n)
+{
+    var = readInt();
+    sum = sum + var;
+    i = i + 1;
+}
+
+----------------------------------------------------------------
+p1err:
+
+int 4n = 5; //identifier has to start with a letter
+int sum = 015; // constant int cannot start with 0 if the constant is not zero 
+int i = 0;
+int var;
+while (i < n)
+{
+    var = readInt();
+    sum = sum + var;
+    i = i + 1;
+}

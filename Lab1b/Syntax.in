@@ -1,0 +1,28 @@
+program = {declaration}{statement}.
+
+declaration = (simpledeclaration | arraydeclaration) ";".
+
+simpledeclaration = type identifierlist.
+type = "int" | "bool" | "char" | "string".
+identifier_list = identifier ["=" expression] {"," identifier ["=" expression]}.
+expression = intexpression | boolexpression | charexpression | stringexpression.
+intexpression = int | identifier | intexpression ("+"|"-"|"*"|"/"|"%") intexpression | 
+                "(" intexpression ("+"|"-"|"*"|"/"|"%") intexpression ")".
+boolexpression = bool | ["!"] identifier | boolexpression ("&&" | "||" | "==" | "<" | "<=" | ">" | ">=") boolexpression | 
+                "(" boolexpression ("&&" | "||" | "==" | "<" | "<=" | ">" | ">=") boolexpression ")".
+charexpression = char | identifier.
+stringexpression = string | identifier | stringexpression "+" stringexpression | 
+                "(" stringexpression "+" stringexpression ")".
+
+arraydeclaration = "array" "[" type "]" "[" positivint "]" simpleidentifierlist. 
+positivint = non_zero_digit{digit}.
+simpleidentifierlist = identifier {"," identifier}. 
+
+statement = assignstatement ";" | ifstatement | whilestatement | functionstatement ";".
+
+assignstatement = identifier "=" (expression | functionstatement).
+ifstatement = "if" "(" boolexpression ")" "{" {statement} "}" ["else" "{" {statement} "}"].
+whilestatement = "while" "(" boolexpression ")" "{" {statement} "}".
+functionstatement = functionname "(" [expressionlist] ")".
+functionname = "readInt" | "readString" | "get" | "set".
+expressionlist = expression {"," expression}.

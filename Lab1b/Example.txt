@@ -1,0 +1,18 @@
+int n = 5;
+int sum = 0;
+int i = 0;
+array[int][3] firstNumbers;
+int var;
+while (i < n)
+{
+    var = readInt();
+    sum = sum + var;
+    if (i < 3)
+    {
+        set(firstNumbers, i, var)
+    }
+    i = i + 1;
+}
+
+print("The first number was ");
+print(get(firstNumbers, 0));

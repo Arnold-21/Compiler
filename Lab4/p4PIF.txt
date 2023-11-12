@@ -1,0 +1,8 @@
+ReservedWord - 22, -1 (int)
+Identifier - 2, 0 (n)
+Operator - 9, -1 (=)
+Intb - 1, 0 (5)
+Separator - 18, -1 (;)
+ReservedWord - 22, -1 (int)
+Identifier - 6, 0 (sum)
+Operator - 9, -1 (=)

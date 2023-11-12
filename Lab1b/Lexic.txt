@@ -1,0 +1,27 @@
+Alphabet:
+    - a-z
+    - A-Z
+    - 0-9
+
+Operators: + - * / % && || ! = == < <= > >=
+Separators: {} () ; space newline " , '
+Reserved Words: int, bool, char, string, if, else, while, print, readInt, readString, array, true, false, set, get
+
+-----------------------------------------------------------------------
+Identifier:
+
+letter = "A" | "B" | ... | "Z" | "a" | ... | "z".
+digit = "0" | "1" | ... | "9".
+identifier = letter{letter | digit}.
+
+-----------------------------------------------------------------------
+Constants:
+
+bool = "true" | "false".
+
+char = 'letter' | 'digit'.
+
+non_zero_digit = "1" | "2" | ... | "9".
+int = ["+" | "-"]non_zero_digit{digit} | "0".
+
+string = """{letter | digit | " "}""".
