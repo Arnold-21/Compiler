@@ -138,7 +138,7 @@ void handleScannerRun(){
 
 int main(int argc, char *argv[]){
     int currentChoice;
-    FiniteAutomata automata("identifier.in");
+    FiniteAutomata automata("FiniteAutomata/identifier.in");
 
     //Menu
     while (true){
