@@ -111,10 +111,14 @@ void Grammar::printProductions(std::string symbol){
 }
 
 bool Grammar::checkCFG(){
-    //Check if every left hand contains only one symbol
+    //Check that every for every production the left hand side only contains one nonterminal and nothing else
+
     for(const auto& elem : this->productions)
     {
+        //Check that there is only one element in the left hand side
         if (elem.first.size() != 1) return false;
+        //Check that the element which remains is a nonterminal
+        if (std::count(this->nonTerminals.begin(), this->nonTerminals.end(), elem.first[0]) != 1) return false;
     }
     return true;
 }

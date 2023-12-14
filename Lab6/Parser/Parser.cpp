@@ -10,19 +10,33 @@ Parser::Parser(Grammar grammar, std::vector<std::string> input){
     this->currentConfig.inputStack.push(grammar.startingSymbol);
 }
 
-bool Parser::expand(){
-    if (this->currentConfig.inputStack.size() == 0) return false;
-    if (this->currentConfig.state != 'q') return false;
+bool Parser::isNonterminal(std::string& symbol){
+    //Search given symbol in the grammar nonterminals
+    if (std::count(this->grammar.nonTerminals.begin(), this->grammar.nonTerminals.end(), symbol) != 0) return true;
+    return false;
+}
 
-    //Check if first element in the input stack is a nonterminal
-    std::string first = this->currentConfig.inputStack.back();
-    if (std::count(this->grammar.nonTerminals.begin(), this->grammar.nonTerminals.end(), first) == 0) return false;
+bool Parser::isTerminal(std::string symbol){
+    //Check for space special case in my grammar
+    if (symbol == " ") symbol = "space";
+
+    //Search given symbol in the grammar terminals
+    if (std::count(this->grammar.terminals.begin(), this->grammar.terminals.end(), symbol) != 0) return true;
+    return false;
+}
+
+bool Parser::expand(){
+    std::string first = this->currentConfig.inputStack.top();
     this->currentConfig.inputStack.pop();
 
     //Get the elements first productions
     std::vector<std::string> productions = this->grammar.getProduction(first, 0);
-    for (int i = productions.size() - 1; i >= 0; i--){
-        this->currentConfig.inputStack.push(productions[i]);
+
+    //Check special case epsilon, so it doesn't put that in the input stack
+    if (productions.size() != 1 || productions[0] != "epsilon"){
+        for (int i = productions.size() - 1; i >= 0; i--){
+            this->currentConfig.inputStack.push(productions[i]);
+        }
     }
 
     //Put the nonterminal to the working stack
@@ -32,15 +46,7 @@ bool Parser::expand(){
 }
 
 bool Parser::advance(){
-    if (this->currentConfig.inputStack.size() == 0) return false;
-    if (this->currentConfig.state != 'q') return false;
-
-    //Check if first element in the input stack is a terminal
-    std::string first = this->currentConfig.inputStack.back();
-    if (std::count(this->grammar.terminals.begin(), this->grammar.terminals.end(), first) == 0) return false;
-
-    //Check if current symbol is equal to the input's current symbol
-    if (first != this->input[this->currentConfig.position]) return false;
+    std::string first = this->currentConfig.inputStack.top();
     this->currentConfig.inputStack.pop();
 
     //Add symbol to working stack and increment position
@@ -51,16 +57,6 @@ bool Parser::advance(){
 }
 
 bool Parser::mIn(){
-    if (this->currentConfig.inputStack.size() == 0) return false;
-    if (this->currentConfig.state != 'q') return false;
-
-    //Check if first element in the input stack is a terminal
-    std::string first = this->currentConfig.inputStack.back();
-    if (std::count(this->grammar.terminals.begin(), this->grammar.terminals.end(), first) == 0) return false;
-
-    //Check if current symbol is not equal to the input's current symbol
-    if (first == this->input[this->currentConfig.position]) return false;
-
     //Change config status
     this->currentConfig.state = 'b';
 
@@ -68,12 +64,7 @@ bool Parser::mIn(){
 }
 
 bool Parser::back(){
-    if (this->currentConfig.workingStack.size() == 0) return false;
-    if (this->currentConfig.state != 'b') return false;
-
-    //Check if first element in the working stack is a terminal
     std::pair<std::string,int> first = this->currentConfig.workingStack.back();
-    if (std::count(this->grammar.terminals.begin(), this->grammar.terminals.end(), first.first) == 0) return false;
     this->currentConfig.workingStack.pop_back();
 
     //Put the terminal back to the input stack and decrement position
@@ -84,12 +75,8 @@ bool Parser::back(){
 }
 
 bool Parser::anTry(){
-    if (this->currentConfig.workingStack.size() == 0) return false;
-    if (this->currentConfig.state != 'b') return false;
-
     //Check if first element in the working stack is a nonterminal
     std::pair<std::string,int> first = this->currentConfig.workingStack.back();
-    if (std::count(this->grammar.nonTerminals.begin(), this->grammar.nonTerminals.end(), first.first) == 0) return false;
     this->currentConfig.workingStack.pop_back();
 
     //Handle the different cases
@@ -106,9 +93,12 @@ bool Parser::anTry(){
             this->currentConfig.inputStack.pop();
         }
 
+        //Checking if the productions is epsilon, in which case the addition should be skipped
         //Add new production
-        for (int i=nextProduction.size() - 1; i >= 0; i--){
-            this->currentConfig.inputStack.push(nextProduction[i]);
+        if (nextProduction.size() != 1 || nextProduction[0] != "epsilon"){
+            for (int i=nextProduction.size() - 1; i >= 0; i--){
+                this->currentConfig.inputStack.push(nextProduction[i]);
+            }
         }
 
         //Change config state
@@ -132,12 +122,6 @@ bool Parser::anTry(){
 }
 
 bool Parser::success(){
-    //Check if the input stack is empty
-    if (!this->currentConfig.inputStack.empty()) return false;
-
-    //Check if the position is equal to the input size + 1
-    if (this->input.size() - 1 != this->currentConfig.position) return false;
-
     //Change the state to f (finished)
     this->currentConfig.state = 'f';
 
@@ -155,7 +139,7 @@ void Parser::test(){
 
     //Checking expand function
     {
-        std::string first = this->currentConfig.inputStack.back();
+        std::string first = this->currentConfig.inputStack.top();
         this->currentConfig.inputStack.pop();
         this->currentConfig.state = 'b';
 
@@ -171,7 +155,7 @@ void Parser::test(){
     //Checking advance function
     {
         this->currentConfig = copyConfig;
-        std::string first = this->currentConfig.inputStack.back();
+        std::string first = this->currentConfig.inputStack.top();
         this->currentConfig.inputStack.pop();
         this->currentConfig.state = 'b';
 
@@ -195,7 +179,7 @@ void Parser::test(){
     {
         this->currentConfig = copyConfig;
         this->input = copyInput;
-        std::string first = this->currentConfig.inputStack.back();
+        std::string first = this->currentConfig.inputStack.top();
         this->currentConfig.inputStack.pop();
         this->currentConfig.state = 'b';
 
@@ -210,7 +194,7 @@ void Parser::test(){
         this->assert(this->mIn() == false);
         this->input = std::vector<std::string>{"b", "b"};
         this->assert(this->mIn() == true);
-        this->assert(this->currentConfig.inputStack.back() == "a");
+        this->assert(this->currentConfig.inputStack.top() == "a");
         this->assert(this->currentConfig.state == 'b');
     }
 
@@ -225,7 +209,7 @@ void Parser::test(){
         this->currentConfig.state = 'b';
         this->assert(this->back() == true);
         this->assert(this->currentConfig.workingStack.size() == 0);
-        this->assert(this->currentConfig.inputStack.back() == "a");
+        this->assert(this->currentConfig.inputStack.top() == "a");
         this->assert(this->currentConfig.position == -1);
     }
 
@@ -248,7 +232,7 @@ void Parser::test(){
         this->currentConfig.workingStack.push_back({"S", 0});
         this->currentConfig.position++;
         this->assert(this->anTry() == true);
-        this->assert(this->currentConfig.inputStack.front() == "S");
+        this->assert(this->currentConfig.inputStack.top() == "S");
         this->assert(this->currentConfig.workingStack.size() == 0);
 
         this->currentConfig = copyConfig;
@@ -260,7 +244,7 @@ void Parser::test(){
         this->currentConfig.inputStack.push("b");
         this->currentConfig.position++;
         this->assert(this->anTry() == true);
-        this->assert(this->currentConfig.inputStack.front() == "c");
+        this->assert(this->currentConfig.inputStack.top() == "c");
         this->assert(this->currentConfig.workingStack.back().first == "A");
         this->assert(this->currentConfig.workingStack.back().second == 1);
         this->assert(this->currentConfig.state == 'q');
@@ -285,4 +269,52 @@ void Parser::test(){
     this->input = copyInput;
 
     std::cout << "Parser testing was succesfull!" << std::endl;
+}
+
+ParserOutput Parser::parse(){
+    //Implementing the recursive parsing strategy, not recursively
+    //Going until we finish or we get an erro
+    while (this->currentConfig.state != 'f' && this->currentConfig.state != 'e'){
+        //Checking the two possible states, q and b
+        if (this->currentConfig.state == 'q'){
+            //Checking for success
+            if (this->currentConfig.position == this->input.size() && this->currentConfig.inputStack.empty()){
+                this->success();
+            } else {
+                //Checking the head of the input stack, to decide between expand, advance and momentary insuccess
+                std::string first = this->currentConfig.inputStack.top();
+                if (first == "space") first = " ";
+
+                if (isNonterminal(first)){
+                    this->expand();
+                } else if (first == this->input[this->currentConfig.position]){
+                    //Checking if the first element, which is a terminal is equal to the current element from the input
+                    this->advance();
+                } else {
+                    this->mIn();
+                }
+            }
+        } else {
+            //Checking if the head of the working stack is a terminal or not
+            std::string first = this->currentConfig.workingStack.back().first;
+            if (first == "space") first = " ";
+            
+            if (isTerminal(first)){
+                this->back();
+            } else {
+                this->anTry();
+            }
+        }
+    }
+
+    ParserOutput returnValue;
+
+    //Checking if we got an error
+    if (this->currentConfig.state == 'e'){
+        std::cout << "Parsing was not succesfull!" << std::endl;
+    } else {
+        returnValue = ParserOutput(this->currentConfig.workingStack, grammar);        
+    }
+
+    return returnValue;
 }

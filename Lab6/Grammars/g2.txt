@@ -149,9 +149,9 @@ non_zero_digit -> 7
 non_zero_digit -> 8
 non_zero_digit -> 9
 identifier -> letter lastofidentifier
-lastofidentifier -> epsilon
 lastofidentifier -> letter lastofidentifier
 lastofidentifier -> digit lastofidentifier
+lastofidentifier -> epsilon
 boolvalue -> true
 boolvalue -> false
 charvalue -> ' letter '

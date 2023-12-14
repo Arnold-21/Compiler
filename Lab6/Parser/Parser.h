@@ -1,14 +1,15 @@
 #include <vector>
-#include <queue>
+#include <stack>
 #include <string>
-#include "../Grammar/Grammar.h"
+#include "ParserOutput.h"
+
 
 struct Config
 {
     char state = 'q';
     int position = 0;
     std::vector<std::pair<std::string, int>> workingStack;
-    std::queue<std::string> inputStack;
+    std::stack<std::string> inputStack;
 };
 
 class Parser{
@@ -17,14 +18,19 @@ private:
     Config currentConfig;
     Grammar grammar;
     bool assert(bool expression);
+    bool isNonterminal(std::string& symbol);
+    bool isTerminal(std::string symbol);
 
 public:
     Parser(Grammar grammar, std::vector<std::string> input);
+    
     bool expand();
     bool advance();
     bool mIn();
     bool back();
     bool anTry();
     bool success();
+
+    ParserOutput parse();
     void test();
 };

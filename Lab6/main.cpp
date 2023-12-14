@@ -29,6 +29,21 @@ void handleSpecificProduction(Grammar& grammar){
     grammar.printProductions(symbol);
 }
 
+void handleParsing(){
+    //Create and call the two parsings for the two inputs
+    Grammar grammar1("Grammars/g1.txt");
+    // Grammar grammar2("Grammars/g2.txt");
+    Parser parser1(grammar1, std::vector<std::string>{"a", "b", "c"});
+    // Parser parser2(grammar2, std::vector<std::string>{"int", "a", ";"});
+    ParserOutput pout1 = parser1.parse();
+    // ParserOutput pout2 = parser2.parse();
+
+    pout1.printTable();
+    pout1.printToFile("pout1.txt");
+    // pout2.printTable();
+    // pout2.printToFile("pout2.txt");
+}
+
 void printMenu(){
     std::cout << std::endl;
     std::cout << "0. Exit" << std::endl;
@@ -39,6 +54,7 @@ void printMenu(){
     std::cout << "5. Check if grammar is cfg" << std::endl;
     std::cout << "6. Input grammar file name" << std::endl;
     std::cout << "7. Test Parser" << std::endl;
+    std::cout << "8. Parse current file" << std::endl;
 }
 
 int main(int argc, char *argv[]){
@@ -81,6 +97,9 @@ int main(int argc, char *argv[]){
             break;
         case 7:
             parser.test();
+            break;
+        case 8:
+            handleParsing();
             break;
 
         default:
