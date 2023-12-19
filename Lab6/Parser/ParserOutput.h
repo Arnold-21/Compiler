@@ -20,7 +20,7 @@ public:
     ParserOutput(std::vector<std::pair<std::string, int>>& prodString, Grammar grammar);
 
     std::vector<tableRow> getTable();
-    void addElement(int index, std::string pordSymbol, int prodIndex, int parentIndex);
+    void addElement(int index, std::string pordSymbol, int prodIndex, int parentIndex, int siblingIndex);
     void printTable();
     void printToFile(std::string fileName);
 };

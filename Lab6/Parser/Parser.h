@@ -1,6 +1,7 @@
 #include <vector>
 #include <stack>
 #include <string>
+#include <fstream>
 #include "ParserOutput.h"
 
 
@@ -20,6 +21,7 @@ private:
     bool assert(bool expression);
     bool isNonterminal(std::string& symbol);
     bool isTerminal(std::string symbol);
+    std::ofstream out;
 
 public:
     Parser(Grammar grammar, std::vector<std::string> input);

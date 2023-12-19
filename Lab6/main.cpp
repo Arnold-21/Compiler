@@ -29,19 +29,30 @@ void handleSpecificProduction(Grammar& grammar){
     grammar.printProductions(symbol);
 }
 
+std::vector<std::string> readInputFromFile(std::string fileName){
+    std::ifstream in(fileName);
+    std::vector<std::string> returnString;
+    std::string var;
+    while (in >> var){
+        returnString.push_back(var);
+    }
+    in.close();
+    return returnString;
+}
+
 void handleParsing(){
     //Create and call the two parsings for the two inputs
     Grammar grammar1("Grammars/g1.txt");
-    // Grammar grammar2("Grammars/g2.txt");
-    Parser parser1(grammar1, std::vector<std::string>{"a", "b", "c"});
-    // Parser parser2(grammar2, std::vector<std::string>{"int", "a", ";"});
+    Grammar grammar2("Grammars/g2.txt");
+    Parser parser1(grammar1, readInputFromFile("Grammars/g1Pif.txt"));
+    Parser parser2(grammar2, readInputFromFile("Grammars/g2Pif.txt"));
     ParserOutput pout1 = parser1.parse();
-    // ParserOutput pout2 = parser2.parse();
+    ParserOutput pout2 = parser2.parse();
 
     pout1.printTable();
     pout1.printToFile("pout1.txt");
-    // pout2.printTable();
-    // pout2.printToFile("pout2.txt");
+    pout2.printTable();
+    pout2.printToFile("pout2.txt");
 }
 
 void printMenu(){

@@ -1,4 +1,4 @@
-program declaration statement simpledeclaration arraydeclaration type identifierlist identifier expression intexpression boolexpression charexpression stringexpression intvalue boolvalue charvalue stringvalue positivint simpleidentifierlist non_zero_digit digit assignstatement ifstatement whilestatement functionstatement functionname expressionlist digitlist letter lastofidentifier insideString
+optionalsign simpleintexpression simpleboolexpression simplestringexpression program declaration statement simpledeclaration arraydeclaration type identifierlist identifier expression intexpression boolexpression charexpression stringexpression intvalue boolvalue charvalue stringvalue positivint simpleidentifierlist non_zero_digit digit assignstatement ifstatement whilestatement functionstatement functionname expressionlist digitlist letter lastofidentifier insideString
 + - * / % && || ! = == < <= > >= { } ( ) [ ] ; space newline " , ' int bool char string if else while print readInt readString array true false set get epsilon a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9
 program
 program -> declaration statement
@@ -18,45 +18,50 @@ expression -> intexpression
 expression -> boolexpression
 expression -> charexpression
 expression -> stringexpression
-intexpression -> intvalue
-intexpression -> identifier
-intexpression -> intexpression + intexpression
-intexpression -> intexpression - intexpression
-intexpression -> intexpression * intexpression
-intexpression -> intexpression / intexpression
-intexpression -> intexpression % intexpression
-intexpression -> ( intexpression + intexpression )
-intexpression -> ( intexpression - intexpression )
-intexpression -> ( intexpression * intexpression )
-intexpression -> ( intexpression / intexpression )
-intexpression -> ( intexpression % intexpression )
-boolexpression -> boolvalue
-boolexpression -> ! identifier
-boolexpression -> identifier
-boolexpression -> boolexpression && boolexpression
-boolexpression -> boolexpression || boolexpression
-boolexpression -> boolexpression == boolexpression
-boolexpression -> boolexpression < boolexpression
-boolexpression -> boolexpression <= boolexpression
-boolexpression -> boolexpression > boolexpression
-boolexpression -> boolexpression >= boolexpression
-boolexpression -> ( boolexpression && boolexpression )
-boolexpression -> ( boolexpression || boolexpression )
-boolexpression -> ( boolexpression == boolexpression )
-boolexpression -> ( boolexpression < boolexpression )
-boolexpression -> ( boolexpression <= boolexpression )
-boolexpression -> ( boolexpression > boolexpression )
-boolexpression -> ( boolexpression >= boolexpression )
+simpleintexpression -> intvalue
+simpleintexpression -> identifier
+intexpression -> simpleintexpression
+intexpression -> ( simpleintexpression * intexpression )
+intexpression -> ( simpleintexpression / intexpression )
+intexpression -> ( simpleintexpression % intexpression )
+intexpression -> ( simpleintexpression + intexpression )
+intexpression -> ( simpleintexpression - intexpression )
+intexpression -> simpleintexpression * intexpression
+intexpression -> simpleintexpression / intexpression
+intexpression -> simpleintexpression % intexpression
+intexpression -> simpleintexpression + intexpression
+intexpression -> simpleintexpression - intexpression
+simpleboolexpression -> boolvalue
+simpleboolexpression -> ! identifier
+simpleboolexpression -> identifier
+boolexpression -> simpleboolexpression
+boolexpression -> ( simpleboolexpression && boolexpression )
+boolexpression -> ( simpleboolexpression || boolexpression )
+boolexpression -> ( simpleboolexpression == boolexpression )
+boolexpression -> ( intexpression == intexpression )
+boolexpression -> ( intexpression < intexpression )
+boolexpression -> ( intexpression <= intexpression )
+boolexpression -> ( intexpression > intexpression )
+boolexpression -> ( intexpression >= intexpression )
+boolexpression -> simpleboolexpression && boolexpression
+boolexpression -> simpleboolexpression || boolexpression
+boolexpression -> simpleboolexpression == boolexpression
+boolexpression -> intexpression == intexpression
+boolexpression -> intexpression < intexpression
+boolexpression -> intexpression <= intexpression
+boolexpression -> intexpression > intexpression
+boolexpression -> intexpression >= intexpression
 charexpression -> charvalue
 charexpression -> identifier
-stringexpression -> stringvalue
-stringexpression -> identifier
-stringexpression -> stringexpression + stringexpression
-stringexpression -> ( stringexpression + stringexpression )
+simplestringexpression -> stringvalue
+simplestringexpression -> identifier
+stringexpression -> simplestringexpression
+stringexpression -> ( simplestringexpression + stringexpression )
+stringexpression -> simplestringexpression + stringexpression
 arraydeclaration -> array [ type ] [ positivint ] simpleidentifierlist
 positivint -> non_zero_digit digitlist
-digitlist -> epsilon
 digitlist -> digit digitlist
+digitlist -> epsilon
 simpleidentifierlist -> identifier
 simpleidentifierlist -> identifier, simpleidentifierlist
 statement -> assignstatement ; statement
@@ -75,6 +80,7 @@ functionname -> readInt
 functionname -> readString
 functionname -> get
 functionname -> set
+functionname -> print
 expressionlist -> expression
 expressionlist -> expression , expressionlist
 letter -> A
@@ -158,11 +164,11 @@ charvalue -> ' letter '
 charvalue -> ' digit '
 intvalue -> optionalsign positivint
 intvalue -> 0
-optionalsign -> epsilon
 optionalsign -> +
 optionalsign -> - 
+optionalsign -> epsilon
 stringvalue -> " insideString "
-insideString -> epsilon
 insideString -> space insideString
 insideString -> letter insideString
 insideString -> digit insideString
+insideString -> epsilon

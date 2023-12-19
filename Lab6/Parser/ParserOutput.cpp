@@ -2,6 +2,7 @@
 #include <stack>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 ParserOutput::ParserOutput(){}
 
@@ -9,20 +10,20 @@ ParserOutput::ParserOutput(std::vector<std::pair<std::string, int>>& prodString,
     //Going through production string in depth first search matter, building the table
     int prodIndex = -1;
     int tableIndex = 1;
-    std::stack<std::pair<std::string, std::pair<int, int>>> currStack;
-    currStack.push({prodString[0].first, {0, -1}});
+    std::stack<std::pair<std::string, std::pair<int, std::pair<int, int>>>> currStack;
+    currStack.push({prodString[0].first, {0, {-1, -1}}});
 
     //Until we dont get to the end of the production string we continue with the algorithm
     while (prodIndex != prodString.size() && !currStack.empty()){
         //Get the top element from the stack
-        std::pair<std::string, std::pair<int, int>> symbol = currStack.top();
+        std::pair<std::string, std::pair<int, std::pair<int,int>>> symbol = currStack.top();
         currStack.pop();
 
         //Increment production index
         prodIndex++;
 
         //Put the element in the parsing table
-        this->addElement(symbol.second.first, symbol.first, prodString[prodIndex].second, symbol.second.second);
+        this->addElement(symbol.second.first, symbol.first, prodString[prodIndex].second, symbol.second.second.first, symbol.second.second.second);
 
         //Since the top of the stack is equal to the current element in the production string, if the parsing was succesfull, we don't have to check if they are equal
         //Check if the current element is a non terminal
@@ -32,11 +33,17 @@ ParserOutput::ParserOutput(std::vector<std::pair<std::string, int>>& prodString,
 
             //Put every production in the stack
             for (int i = symbolProduction.size() - 1; i>=0; i--){
-                currStack.push({symbolProduction[i], {tableIndex + i, symbol.second.first}});
+                if (i == 0)
+                    currStack.push({symbolProduction[i], {tableIndex + i, {symbol.second.first, -1}}});
+                else
+                    currStack.push({symbolProduction[i], {tableIndex + i, {symbol.second.first, tableIndex + i -1}}});
             }
             tableIndex += symbolProduction.size();
         }
     }
+
+    //Sort the table by index
+    std::sort(this->table.begin(), this->table.end(), [](const tableRow& row1, const tableRow& row2){ return row1.index < row2.index; });
 }
 
 std::vector<tableRow> ParserOutput::getTable(){
@@ -54,18 +61,13 @@ void ParserOutput::printTable(){
 
 void ParserOutput::printToFile(std::string fileName){
     std::ofstream out(fileName);
-    out << std::endl;
     for (auto& i : this->table){
         out << i.index << " - " << i.productionSymbol << "(" << i.productionIndex << ") - p: " << i.parentIndex << " - s: " << i.siblingIndex << std::endl;
     }
-    out << std::endl;
     out.close();
 }
 
-void ParserOutput::addElement(int index, std::string pordSymbol, int prodIndex, int parentIndex){
+void ParserOutput::addElement(int index, std::string pordSymbol, int prodIndex, int parentIndex, int siblingIndex){
     //If the index is just above the parentIndex, the current row doesn't have a sibling, otherwise, it's - 1
-    int siblingIndex = index - 1;
-    if (index == parentIndex + 1) siblingIndex = -1;
-
     this->table.push_back({index, pordSymbol, prodIndex, parentIndex, siblingIndex});
 }

@@ -8,6 +8,9 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
+                "Grammar/Grammar.cpp",
+                "Parser/Parser.cpp",
+                "Parser/ParserOutput.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
