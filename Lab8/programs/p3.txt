@@ -1,0 +1,10 @@
+int n = 5;
+int sum = 0;
+int i = 0;
+int var;
+while (i < n)
+{
+    var = readInt();
+    sum = sum + var;
+    i = i + 1;
+}

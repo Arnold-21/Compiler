@@ -1,0 +1,12 @@
+int x = 12;
+int i = 2;
+bool prime = true;
+while (prime && i*i <= x)
+{
+    if (x % i == 0)
+    {
+        prime = false;
+    }
+    i = i + 1;
+}
+print(prime);
