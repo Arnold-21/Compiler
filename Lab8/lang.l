@@ -15,6 +15,7 @@ IDENTIFIER {LETTER}({LETTER}|{DIGIT})*
 BOOLCONST true|false
 CHARCONST \'({LETTER}|{DIGIT})\'
 INTCONST ([+-]?{NONZERODIGIT}{DIGIT}*|0)
+WRONG {DIGIT}+({LETTER}|{DIGIT})*
 STRINGCONST \"({LETTER}|{DIGIT}|" ")*\"
 
 %%
@@ -59,6 +60,7 @@ STRINGCONST \"({LETTER}|{DIGIT}|" ")*\"
 "\"" { printf("%s - separator\n", yytext); return QUOTE; }
 "\'" { printf("%s - separator\n", yytext); return SIMPLEQUOTE; }
 
+{WRONG} {printf("Error at token %s at line %d\n", yytext, lines); return -1;}
 {BOOLCONST} {printf("%s - BOOLCONST\n", yytext); return BOOLCONST; }
 {CHARCONST} {printf("%s - CHARCONST\n", yytext); return CHARCONST; }
 {STRINGCONST} {printf("%s - STRINGCONST\n", yytext); return STRINGCONST; }
